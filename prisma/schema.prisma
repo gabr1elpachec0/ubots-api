@@ -1,0 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Movie {
+  id           String   @id @default(uuid())
+  title        String
+  release_date DateTime
+
+  reviews Review[]
+
+  @@map("movies")
+}
+
+model Review {
+  id          String @id @default(uuid())
+  description String
+  movieId     String
+
+  movie Movie @relation(fields: [movieId], references: [id])
+
+  @@map("reviews")
+}
