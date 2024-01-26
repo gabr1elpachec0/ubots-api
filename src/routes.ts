@@ -42,14 +42,19 @@ export async function appRoutes(app: FastifyInstance) {
 
     const { title, release_date } = createMovieBody.parse(req.body)
 
-    await prisma.movie.create({
-      data: {
-        title: title,
-        release_date: new Date(release_date),
-      }
-    })
-
-    return 'Filme criado!'
+    try {
+      await prisma.movie.create({
+        data: {
+          title: title,
+          release_date: new Date(release_date),
+        }
+      })
+  
+      return 'Filme criado!'
+    } catch (error) {
+      console.error(error)
+    }
+    
   })
 
   // Atualizar filme
@@ -61,25 +66,28 @@ export async function appRoutes(app: FastifyInstance) {
     const { id } = updateMovieParams.parse(req.params)
     const { title, release_date } = req.body as updateMovieRequest
 
-    const findMovie = await prisma.movie.findUnique({
-      where: {
-        id: id
-      }
-    })
-
-    // console.log(findMovie)
-
-    await prisma.movie.update({
-      where: {
-        id: id
-      },
-      data: {
-        title: title ? title : findMovie?.title,
-        release_date: release_date ? new Date(release_date) : findMovie?.release_date
-      }
-    })
-
-    return 'Filme atualizado!'
+    try {
+      const findMovie = await prisma.movie.findUnique({
+        where: {
+          id: id
+        }
+      })
+    
+      await prisma.movie.update({
+        where: {
+          id: id
+        },
+        data: {
+          title: title ? title : findMovie?.title,
+          release_date: release_date ? new Date(release_date) : findMovie?.release_date
+        }
+      })
+  
+      return 'Filme atualizado!'
+    } catch (error) {
+      console.error(error)
+    }
+    
   })
 
   // Deletar filme
@@ -90,19 +98,24 @@ export async function appRoutes(app: FastifyInstance) {
 
     const { id } = deleteMovieParams.parse(req.params)
 
-    await prisma.review.deleteMany({
-      where: {
-        movieId: id
-      }
-    })
-
-    await prisma.movie.delete({
-      where: {
-        id: id
-      }
-    })
-
-    return 'Filme excluído!'
+    try { 
+      await prisma.review.deleteMany({
+        where: {
+          movieId: id
+        }
+      })
+  
+      await prisma.movie.delete({
+        where: {
+          id: id
+        }
+      })
+  
+      return 'Filme excluído!'
+    } catch (error) {
+      console.error(error)
+    }
+    
   })
 
   // Criar avaliação para um filme
@@ -113,25 +126,30 @@ export async function appRoutes(app: FastifyInstance) {
 
     const { id } = createReviewParams.parse(req.params)
 
-    const findMovie = await prisma.movie.findUnique({
-      where: {
-        id: id
-      }
-    })
-
-    const { description } = req.body as createAndUpdateReviewRequest
-
-    await prisma.review.create({
-      data: {
-        movieId: id,
-        description: description
-      }
-    })
-
-    return `Avaliação para o filme ${findMovie?.title} criada!`
+    try {
+      const findMovie = await prisma.movie.findUnique({
+        where: {
+          id: id
+        }
+      })
+  
+      const { description } = req.body as createAndUpdateReviewRequest
+  
+      await prisma.review.create({
+        data: {
+          movieId: id,
+          description: description
+        }
+      })
+  
+      return `Avaliação para o filme ${findMovie?.title} criada!`
+    } catch (error) {
+      console.error(error)
+    }
+    
   })
 
-  // Listar avaliações por filme
+  // Listar avaliações por ID de filme
   app.get('/reviews/:id', async (req) => {
     const listReviewsParams = z.object({
       id: z.string().uuid()
@@ -139,16 +157,21 @@ export async function appRoutes(app: FastifyInstance) {
 
     const { id } = listReviewsParams.parse(req.params)
 
-    const findReviewsByMovieId = await prisma.review.findMany({
-      where: {
-        movieId: id
-      }
-    })
-
-    return findReviewsByMovieId
+    try {
+      const findReviewsByMovieId = await prisma.review.findMany({
+        where: {
+          movieId: id
+        }
+      })
+  
+      return findReviewsByMovieId
+    } catch (error) {
+      console.error(error)
+    }
+    
   })
 
-  // Atualizar avaliação 
+  // Atualizar alguma avaliação 
   app.patch('/review/:id/update', async (req) => {
     const updateReviewParams = z.object({
       id: z.string().uuid()
@@ -158,17 +181,22 @@ export async function appRoutes(app: FastifyInstance) {
 
     const { description } = req.body as createAndUpdateReviewRequest
 
-    await prisma.review.update({
-      where: {
-        id: id
-      }, 
-      data: {
-        description: description
-      }
-    })
-
-    return `Avaliação atualizada!`
-
+    try {
+      await prisma.review.update({
+        where: {
+          id: id
+        }, 
+        data: {
+          description: description
+        }
+      })
+  
+      return `Avaliação atualizada!`
+  
+    } catch (error) {
+      console.error(error)
+    }
+  
   })
 
   // Deletar avaliação
@@ -179,13 +207,18 @@ export async function appRoutes(app: FastifyInstance) {
 
     const { id } = deleteReviewParams.parse(req.params)
 
-    await prisma.review.delete({
-      where: {
-        id: id
-      }
-    })
-
-    return 'Avaliação excluída!'
+    try {
+      await prisma.review.delete({
+        where: {
+          id: id
+        }
+      })
+  
+      return 'Avaliação excluída!'
+    } catch (error) {
+      console.error(error)
+    }
+     
   })
 
   // Deletar todas avaliações de um filme 
@@ -196,18 +229,23 @@ export async function appRoutes(app: FastifyInstance) {
 
     const { id } = deleteReviewsParams.parse(req.params)
 
-    const findMovie = await prisma.movie.findUnique({
-      where: {
-        id: id
-      }
-    })
-
-    await prisma.review.deleteMany({
-      where: {
-        movieId: id
-      }
-    })
-
-    return `Todas avaliações do filme ${findMovie?.title} foram excluídas!`
+    try {
+      const findMovie = await prisma.movie.findUnique({
+        where: {
+          id: id
+        }
+      })
+  
+      await prisma.review.deleteMany({
+        where: {
+          movieId: id
+        }
+      })
+  
+      return `Todas avaliações do filme ${findMovie?.title} foram excluídas!`
+    } catch (error) {
+      console.error(error)
+    }
+    
   })
 }
