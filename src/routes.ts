@@ -222,7 +222,7 @@ export async function appRoutes(app: FastifyInstance) {
   })
 
   // Deletar todas avaliações de um filme 
-  app.post('/review/:id/delete', async (req) => {
+  app.delete('/reviews/:id/delete', async (req) => {
     const deleteReviewsParams = z.object({
       id: z.string().uuid()
     })
