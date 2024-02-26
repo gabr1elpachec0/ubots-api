@@ -29,12 +29,11 @@ export async function appRoutes(app: FastifyInstance) {
       return moviesWithReviewStatus
     } catch (error) {
       console.error(error)
-    }
-    
+    }   
   })
 
   // Criar filme
-  app.post('/movie', async (req) => {
+  app.post('/movie', async (req, res) => {
     const createMovieBody = z.object({
       title: z.string(),
       release_date: z.string()
@@ -50,15 +49,14 @@ export async function appRoutes(app: FastifyInstance) {
         }
       })
   
-      return 'Filme criado!'
+      return res.status(201).send({ message: 'Filme criado!' }) 
     } catch (error) {
       console.error(error)
-    }
-    
+    }    
   })
 
   // Atualizar filme
-  app.put('/movie/:id/update', async (req) => {
+  app.put('/movie/:id/update', async (req, res) => {
     const updateMovieParams= z.object({
       id: z.string().uuid(),
     })
@@ -83,15 +81,14 @@ export async function appRoutes(app: FastifyInstance) {
         }
       })
   
-      return 'Filme atualizado!'
+      return res.status(200).send({ message: 'Filme atualizado!' })
     } catch (error) {
       console.error(error)
-    }
-    
+    }    
   })
 
   // Deletar filme
-  app.delete('/movie/:id/delete', async (req) => {
+  app.delete('/movie/:id/delete', async (req, res) => {
     const deleteMovieParams = z.object({
       id: z.string().uuid()
     })
@@ -111,15 +108,14 @@ export async function appRoutes(app: FastifyInstance) {
         }
       })
   
-      return 'Filme excluído!'
+      return res.status(200).send({ message: 'Filme excluído!' })
     } catch (error) {
       console.error(error)
-    }
-    
+    }    
   })
 
   // Criar avaliação para um filme
-  app.post('/review/:id', async (req) => {
+  app.post('/review/:id', async (req, res) => {
     const createReviewParams = z.object({
       id: z.string().uuid()
     })
@@ -142,11 +138,10 @@ export async function appRoutes(app: FastifyInstance) {
         }
       })
   
-      return `Avaliação para o filme ${findMovie?.title} criada!`
+      return res.status(201).send({ message: `Avaliação para o filme ${findMovie?.title} criada!` }) 
     } catch (error) {
       console.error(error)
     }
-    
   })
 
   // Listar avaliações por ID de filme
@@ -168,11 +163,10 @@ export async function appRoutes(app: FastifyInstance) {
     } catch (error) {
       console.error(error)
     }
-    
   })
 
   // Atualizar alguma avaliação 
-  app.patch('/review/:id/update', async (req) => {
+  app.patch('/review/:id/update', async (req, res) => {
     const updateReviewParams = z.object({
       id: z.string().uuid()
     })
@@ -191,16 +185,14 @@ export async function appRoutes(app: FastifyInstance) {
         }
       })
   
-      return `Avaliação atualizada!`
-  
+      return res.status(200).send({ message: 'Avaliação atualizada!' })
     } catch (error) {
       console.error(error)
     }
-  
   })
 
   // Deletar avaliação
-  app.delete('/review/:id/delete', async (req) => {
+  app.delete('/review/:id/delete', async (req, res) => {
     const deleteReviewParams = z.object({
       id: z.string().uuid()
     })
@@ -214,15 +206,14 @@ export async function appRoutes(app: FastifyInstance) {
         }
       })
   
-      return 'Avaliação excluída!'
+      return res.status(200).send({ message: 'Avaliação excluída!' }) 
     } catch (error) {
       console.error(error)
     }
-     
   })
 
   // Deletar todas avaliações de um filme 
-  app.delete('/reviews/:id/delete', async (req) => {
+  app.delete('/reviews/:id/delete', async (req, res) => {
     const deleteReviewsParams = z.object({
       id: z.string().uuid()
     })
@@ -242,10 +233,9 @@ export async function appRoutes(app: FastifyInstance) {
         }
       })
   
-      return `Todas avaliações do filme ${findMovie?.title} foram excluídas!`
+      return res.status(200).send({ message: `Todas avaliações do filme ${findMovie?.title} foram excluídas!` }) 
     } catch (error) {
       console.error(error)
-    }
-    
+    }    
   })
 }
