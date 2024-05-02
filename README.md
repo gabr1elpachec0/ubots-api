@@ -20,6 +20,3 @@
 1. ```npm install```
 2. ```npx prisma migrate dev```
 3. ```npm run dev```
-
-[![](https://markdown-videos-api.jorgenkh.no/youtube/dQw4w9WgXcQ)](https://youtu.be/dQw4w9WgXcQ)
-
