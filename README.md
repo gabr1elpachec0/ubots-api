@@ -21,4 +21,5 @@
 2. ```npx prisma migrate dev```
 3. ```npm run dev```
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/1Z6JRjM7kWY?si=ME3A5ez48LysVtUF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![alt text](https://img.youtube.com/vi/video-id/0.jpg)](https://www.youtube.com/watch?v=video-id)
+
